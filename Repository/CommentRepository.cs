@@ -18,7 +18,7 @@ namespace Repository
         { }
 
         public async Task<Comment> GetCommentAsync(int commentId, bool trackChanges) =>
-           await FindByCondition(e => e.CommentId.Equals(commentId), trackChanges)
+           await FindByCondition(e => e.Id.Equals(commentId), trackChanges)
             .SingleOrDefaultAsync();
 
 

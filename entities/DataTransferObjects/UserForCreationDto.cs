@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Entities.DataTransferObjects
 {
-    public class EmployeeForCreationDto : EmployeeForManipulationDto
+    public class UserForCreationDto : UserForManipulationDto
     {
         
     }

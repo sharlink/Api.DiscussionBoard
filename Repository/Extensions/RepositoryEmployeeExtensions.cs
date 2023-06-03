@@ -12,7 +12,7 @@ namespace Repository.Extensions
     public static class RepositoryCommentExtensions
     {
         public static IQueryable<Comment> FilterComments(this IQueryable<Comment> comments, string userName) =>
-            comments.Where(e => (e.CommentContent.Contains(userName)));
+            comments.Where(e => (e.Content.Contains(userName)));
 
         public static IQueryable<Comment> Search(this IQueryable<Comment> comments, string searchTerm)
         {
@@ -21,7 +21,7 @@ namespace Repository.Extensions
 
             var lowerCaseTerm = searchTerm.Trim().ToLower();
 
-            return comments.Where(e => e.CommentContent.ToLower().Contains(lowerCaseTerm));
+            return comments.Where(e => e.Content.ToLower().Contains(lowerCaseTerm));
         }
 
         public static IQueryable<Comment> Sort(this IQueryable<Comment> comments, string orderByQueryString)

@@ -24,7 +24,7 @@ namespace CompanyEmployees.ActionFilters
             var method = context.HttpContext.Request.Method;
             var trackChanges = (method.Equals("PUT") || method.Equals("PATCH")) ? true : false;
 
-            var userId = (Guid)context.ActionArguments["Id"];
+            var userId = (Guid)context.ActionArguments["userId"];
             var user = await _repository.User.GetUserAsync(userId, false);
 
             if(user == null)
@@ -34,7 +34,7 @@ namespace CompanyEmployees.ActionFilters
                 return;
             }
 
-            var id = (int)context.ActionArguments["commentId"];
+            var id = (int)context.ActionArguments["id"];
             var comment = await _repository.Comment.GetCommentAsync(id, trackChanges);
             if (comment == null)
             {

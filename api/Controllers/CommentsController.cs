@@ -4,10 +4,8 @@ using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
 using Entities.RequestFeatures;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System.ComponentModel.Design;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 
 namespace Api.Controllers
@@ -36,23 +34,13 @@ namespace Api.Controllers
                 return NotFound();
             }
 
-
-            
-           
-
-            //var employeesFromDb = await _repository.Employee.GetEmployeesAsync(companyId, employeeParameters, trackChanges: false);
-
-            //Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(employeesFromDb.MetaData));
-
-            //var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employeesFromDb);
-
             return Ok(comments);
         }
 
         [HttpGet("{id}", Name = "GetCommentForUser")]
         public async Task<IActionResult> GetComment(int id)
         {
-            var comment = await _repository.Comment.GetCommentAsync(id, trackChanges: false);
+            var comment = await _repository.Comment.GetCommentWithRepliesAsync(id, trackChanges: false);
             if (comment == null)
             {
                 return NotFound();
@@ -62,7 +50,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCommentForUser(Guid userId, [FromBody] CommentForCreationDto comment)
+        public async Task<IActionResult> CreateCommentForUser([BindRequired] Guid userId, [FromBody] CommentForCreationDto comment)
         {
 
             var user = await _repository.User.GetUserAsync(userId, trackChanges: false);
@@ -82,14 +70,14 @@ namespace Api.Controllers
             return CreatedAtRoute("GetCommentForUser", new { userId, id = employeeToReturn.UserId }, employeeToReturn);
 
         }
-        
+
 
         [HttpPut("{id}")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ServiceFilter(typeof(ValidateUserForCommentExistsAttribute))]
-        public async Task<IActionResult> UpdateCommentForUser(int commentId, Guid id, [FromBody] CommentForUpdateDto comment)
+        public async Task<IActionResult> UpdateCommentForUser(int id, [BindRequired] Guid userId, [FromBody] CommentForUpdateDto comment)
         {
-            var commentEntity = HttpContext.Items["comment"] as Comment;            
+            var commentEntity = HttpContext.Items["comment"] as Comment;
 
             _mapper.Map(comment, commentEntity);
             await _repository.SaveAsync();
@@ -99,7 +87,7 @@ namespace Api.Controllers
 
         [HttpDelete("{id}")]
         [ServiceFilter(typeof(ValidateUserForCommentExistsAttribute))]
-        public async Task<IActionResult> DeleteCommentForUser(int commentId, Guid id)
+        public async Task<IActionResult> DeleteCommentForUser(int id, [BindRequired] Guid userId)
         {
             var commentForUser = HttpContext.Items["comment"] as Comment;
 

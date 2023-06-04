@@ -8,9 +8,9 @@ namespace Entities.DataTransferObjects
     {
         public int commentId { get; set; }
         public string content { get; set; }
-        public DateTime createdAt { get; set; }
+        public DateTime? createdAt { get; set; }
         public int? score { get; set; }
-        public string userId { get; set; }
+        public Guid userId { get; set; }
         public List<Reply> replies { get; set; }
     }
 
@@ -18,10 +18,10 @@ namespace Entities.DataTransferObjects
     {
         public int commentId { get; set; }
         public string content { get; set; }
-        public DateTime createdAt { get; set; }
+        public DateTime? createdAt { get; set; }
         public int? score { get; set; }
         public string replyingTo { get; set; }
-        public string userId { get; set; }
+        public Guid? userId { get; set; }
     }   
 
 }

@@ -1,5 +1,6 @@
 ﻿using Contracts;
 using Entities;
+using Entities.DataTransferObjects;
 using Entities.Models;
 using Entities.RequestFeatures;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Repository
 {
@@ -18,36 +20,27 @@ namespace Repository
         { }
 
         public async Task<Comment> GetCommentAsync(int commentId, bool trackChanges) =>
-           await FindByCondition(e => e.Id.Equals(commentId), trackChanges)
-            .SingleOrDefaultAsync();
+            await FindByCondition(e => e.Id.Equals(commentId), trackChanges)
+               .SingleOrDefaultAsync();        
 
+        public async Task<List<CommentsWithRepliesDto>> GetCommentWithRepliesAsync(int commentId, bool trackChanges)
+        {
+            var comment = await FindByCondition(e => e.Id.Equals(commentId) | e.ParentCommantId.Equals(commentId), trackChanges)
+             .ToListAsync();
 
-        public async Task<PagedList<Comment>> GetCommentsAsync(CommentParameters commentParameters, bool trackChanges)
+            return MakeCommentsReplies(comment);
+        }
+
+        public async Task<PagedList<CommentsWithRepliesDto>> GetCommentsAsync(CommentParameters commentParameters, bool trackChanges)
         {
             var comments = await FindAll(trackChanges)
                 .ToListAsync();
 
-            var parentComments = comments.Where(p => p.ParentCommantId == 0).ToList();
-            var replyComments = comments.Where(p => p.ParentCommantId != 0).ToList();
+            var comtsWithReplies = MakeCommentsReplies(comments);
 
-            var commentsWithReplies = from p in parentComments
-                                      join r in replyComments on p.Id equals r.ParentCommantId
-                                      into replies
-                                      from defultVal in replies.DefaultIfEmpty()
-                                      select new
-                                      {
-                                          commentID = p.Id,
-                                          content = p.Content,
-                                          replyContent = defultVal?.Content
-
-                                      };
-
-            var cunt = commentsWithReplies.Count();
-
-            return PagedList<Comment>
-                 .ToPagedList(comments, commentParameters.PageNumber, commentParameters.PageSize);
+            return PagedList<CommentsWithRepliesDto>
+                 .ToPagedList(comtsWithReplies, commentParameters.PageNumber, commentParameters.PageSize);
         }
-
 
         public void CreateCommentForUser(Guid userId, Comment comment)
         {
@@ -60,5 +53,42 @@ namespace Repository
             Delete(comment);
         }
 
+        private List<CommentsWithRepliesDto> MakeCommentsReplies(List<Comment> comments)
+        {
+            var parentComments = comments.Where(p => p.ParentCommantId == 0).ToList();
+            var replyComments = comments.Where(p => p.ParentCommantId != 0).ToList();
+
+            var comtsWithReplies = new List<CommentsWithRepliesDto>();
+
+            if (parentComments.Any())
+            {
+                foreach (var comment in parentComments)
+                {
+                    var replies = replyComments.Where(r => r.ParentCommantId.Equals(comment.Id));
+                    var _comments = new CommentsWithRepliesDto
+                    {
+                        commentId = comment.Id,
+                        content = comment.Content,
+                        createdAt = comment.CreatedAt,
+                        score = comment.Score,
+                        userId = comment.UserId,
+                        replies = (from r in replies
+                                   select new Reply
+                                   {
+                                       commentId = r.Id,
+                                       content = r.Content,
+                                       createdAt = r.CreatedAt,
+                                       score = r.Score,
+                                       replyingTo = r.ReplyingTo,
+                                       userId = r.UserId,
+                                   }).ToList()
+                    };
+
+                    comtsWithReplies.Add(_comments);
+                }
+            }
+
+            return comtsWithReplies;
+        }       
     }
 }

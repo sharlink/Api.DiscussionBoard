@@ -1,4 +1,4 @@
-namespace Api.Test
+namespace Api.DiscussionBoard.Test
 {
     public class UnitTest1
     {

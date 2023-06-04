@@ -33,19 +33,7 @@ namespace Api.ActionFilters
                 context.Result = new NotFoundResult();
                 return;
             }
-
-            var id = (int)context.ActionArguments["id"];
-            var comment = await _repository.Comment.GetCommentAsync(id, trackChanges);
-            if (comment == null)
-            {
-                _logger.LogInfo($"Comment with id: {id} doesn't exist in the database.");
-                context.Result = new NotFoundResult();
-            }
-            else
-            {
-                context.HttpContext.Items.Add("comment", comment);
-                await next();
-            }
+            await next();            
         }
     }
 }

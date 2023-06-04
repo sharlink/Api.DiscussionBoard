@@ -6,10 +6,13 @@ using Entities.Models;
 using Entities.RequestFeatures;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
 
 namespace Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CommentsController : ControllerBase
@@ -26,7 +29,8 @@ namespace Api.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetComments([FromQuery] CommentParameters commentParameters)
-        {
+        {           
+
             var comments = await _repository.Comment.GetCommentsAsync(commentParameters, trackChanges: false);
             if (comments == null)
             {
@@ -52,6 +56,10 @@ namespace Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCommentForUser([BindRequired] Guid userId, [FromBody] CommentForCreationDto comment)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }            
 
             var user = await _repository.User.GetUserAsync(userId, trackChanges: false);
             if (user == null)
@@ -77,7 +85,12 @@ namespace Api.Controllers
         [ServiceFilter(typeof(ValidateUserForCommentExistsAttribute))]
         public async Task<IActionResult> UpdateCommentForUser(int id, [BindRequired] Guid userId, [FromBody] CommentForUpdateDto comment)
         {
-            var commentEntity = HttpContext.Items["comment"] as Comment;
+            var commentEntity = await _repository.Comment.GetCommentAsync(id, trackChanges: true);
+            if (commentEntity == null)
+            {
+                _logger.LogInfo($"Comment with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
 
             _mapper.Map(comment, commentEntity);
             await _repository.SaveAsync();
@@ -89,7 +102,7 @@ namespace Api.Controllers
         [ServiceFilter(typeof(ValidateUserForCommentExistsAttribute))]
         public async Task<IActionResult> DeleteCommentForUser(int id, [BindRequired] Guid userId)
         {
-            var commentForUser = HttpContext.Items["comment"] as Comment;
+            var commentForUser = await _repository.Comment.GetCommentAsync(id, trackChanges: false);
 
             _repository.Comment.DeleteComment(commentForUser);
             await _repository.SaveAsync();

@@ -37,6 +37,9 @@ namespace Repository
             Delete(user);
         }
 
-        
+        public async Task<User> UserAuthenticateAsync(string userName, string password, bool trackChanges) =>
+             await FindByCondition(c => c.UserName.Equals(userName), trackChanges)
+            .SingleOrDefaultAsync();
+
     }
 }

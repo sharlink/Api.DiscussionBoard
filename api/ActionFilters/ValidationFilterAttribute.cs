@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Linq;
 
-namespace CompanyEmployees.ActionFilters
+namespace Api.ActionFilters
 {
     public class ValidationFilterAttribute : IActionFilter
     {

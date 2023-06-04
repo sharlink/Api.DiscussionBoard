@@ -1,5 +1,5 @@
 using Api.Extentions;
-using CompanyEmployees.ActionFilters;
+using Api.ActionFilters;
 using Microsoft.AspNetCore.Hosting;
 using NLog;
 

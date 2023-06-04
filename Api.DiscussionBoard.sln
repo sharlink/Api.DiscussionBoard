@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contracts", "Contracts\Cont
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoggerService", "LoggerService\LoggerService.csproj", "{A86B0DE6-C372-45F9-9C02-CEA1FFA3F917}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api.Test", "Api.Test\Api.Test.csproj", "{3F389897-D71C-4E5F-8024-583E56AF5EE7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,12 +45,17 @@ Global
 		{A86B0DE6-C372-45F9-9C02-CEA1FFA3F917}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A86B0DE6-C372-45F9-9C02-CEA1FFA3F917}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A86B0DE6-C372-45F9-9C02-CEA1FFA3F917}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F389897-D71C-4E5F-8024-583E56AF5EE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F389897-D71C-4E5F-8024-583E56AF5EE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F389897-D71C-4E5F-8024-583E56AF5EE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F389897-D71C-4E5F-8024-583E56AF5EE7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{51A25426-E140-473B-A5CB-418A47F104DF} = {2F7F19C0-E028-4CCC-B319-B065EE140A6F}
+		{3F389897-D71C-4E5F-8024-583E56AF5EE7} = {D0EF1FD0-E486-443C-AE85-07E93F8B6C30}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EAA2852B-72EA-4A28-ACA7-ACDECE96F035}

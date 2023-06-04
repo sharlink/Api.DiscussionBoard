@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using CompanyEmployees.ActionFilters;
+using Api.ActionFilters;
 using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
@@ -65,9 +65,9 @@ namespace Api.Controllers
             _repository.Comment.CreateCommentForUser(userId, commentEntity);
             await _repository.SaveAsync();
 
-            var employeeToReturn = _mapper.Map<CommentDto>(commentEntity);
+            var commentToReturn = _mapper.Map<CommentDto>(commentEntity);
 
-            return CreatedAtRoute("GetCommentForUser", new { userId, id = employeeToReturn.UserId }, employeeToReturn);
+            return CreatedAtRoute("GetCommentForUser", new { userId, id = commentToReturn.UserId }, commentToReturn);
 
         }
 

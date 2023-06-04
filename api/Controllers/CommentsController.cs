@@ -29,7 +29,7 @@ namespace Api.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetComments([FromQuery] CommentParameters commentParameters)
-        {           
+        {
 
             var comments = await _repository.Comment.GetCommentsAsync(commentParameters, trackChanges: false);
             if (comments == null)
@@ -59,7 +59,7 @@ namespace Api.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
-            }            
+            }
 
             var user = await _repository.User.GetUserAsync(userId, trackChanges: false);
             if (user == null)
@@ -79,6 +79,37 @@ namespace Api.Controllers
 
         }
 
+        [HttpPost("{id}/reply")]
+        public async Task<IActionResult> CreateReplyForComment(int id, [BindRequired] Guid userId, [FromBody] CommentsReplyForCreationDto comment)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = await _repository.User.GetUserAsync(userId, trackChanges: false);
+            if (user == null)
+            {
+                _logger.LogInfo($"User with id: {userId} doesn't exist in the database.");
+                return NotFound();
+            }
+
+            var existingcommentEntity = await _repository.Comment.GetCommentAsync(id, trackChanges: true);
+            if (existingcommentEntity == null)
+            {
+                _logger.LogInfo($"Comment with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+
+            var commentEntity = _mapper.Map<Comment>(comment);
+
+            _repository.Comment.CreateCommentsReplyForUser(id, userId, commentEntity);
+            await _repository.SaveAsync();
+
+            var commentToReturn = _mapper.Map<CommentDto>(commentEntity);
+
+            return CreatedAtRoute("GetCommentForUser", new { userId, id = commentToReturn.UserId }, commentToReturn);
+        }
 
         [HttpPut("{id}")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]

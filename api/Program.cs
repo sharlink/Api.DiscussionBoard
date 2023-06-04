@@ -84,8 +84,10 @@ builder.Services.AddSwaggerGen(c =>
 
 
 var app = builder.Build();
-app.UseIpRateLimiting();
+
 // Configure the HTTP request pipeline.
+app.UseIpRateLimiting();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

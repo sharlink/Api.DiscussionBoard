@@ -10,6 +10,8 @@ namespace Api
         {
             CreateMap<CommentForCreationDto, Comment>();
 
+            CreateMap<CommentsReplyForCreationDto, Comment>();
+
             CreateMap<Comment, CommentDto>();
 
             CreateMap<CommentForUpdateDto, Comment>();            

@@ -78,6 +78,25 @@ namespace Api.DiscussionBoard.Test.Controllers
         }
 
         [Fact]
+        public async void CommentsController_CreateReplyForComment_ReturnOk()
+        {
+            //Arrange
+            int id = 1;
+            Guid userId = Guid.NewGuid();
+            var commentDto = A.Fake<CommentsReplyForCreationDto>();
+            var comment = A.Fake<Comment>();
+            A.CallTo(() => _mapper.Map<Comment>(commentDto));
+            A.CallTo(() => _mapper.Map<CommentsReplyForCreationDto>(comment));
+            var controller = new CommentsController(_logger, _mapper, _repository);
+
+            //Act
+            var result = await controller.CreateReplyForComment(id, userId, commentDto);
+
+            //Assert
+            result.Should().NotBeNull();
+        }
+
+        [Fact]
         public async void CommentsController_UpdateCommentForUser_ReturnOk()
         {
             //Arrange

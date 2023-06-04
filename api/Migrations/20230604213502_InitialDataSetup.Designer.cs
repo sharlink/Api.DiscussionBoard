@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Api.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20230602162333_InitialSetUp")]
-    partial class InitialSetUp
+    [Migration("20230604213502_InitialDataSetup")]
+    partial class InitialDataSetup
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,14 +27,16 @@ namespace Api.Migrations
 
             modelBuilder.Entity("Entities.Models.Comment", b =>
                 {
-                    b.Property<int>("CommentId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("CommentId");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CommentId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CommentContent")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("CommentContent");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -54,7 +56,7 @@ namespace Api.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("CommentId");
+                    b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
@@ -63,42 +65,44 @@ namespace Api.Migrations
                     b.HasData(
                         new
                         {
-                            CommentId = 1,
-                            CommentContent = "Impressive! Though it seems the drag feature could be improved. But overall it looks incredible. You've nailed the design and the responsiveness at various breakpoints works really well.",
-                            CreatedAt = new DateTime(2023, 6, 3, 2, 23, 33, 143, DateTimeKind.Local).AddTicks(3829),
+                            Id = 1,
+                            Content = "Impressive! Though it seems the drag feature could be improved. But overall it looks incredible. You've nailed the design and the responsiveness at various breakpoints works really well.",
+                            CreatedAt = new DateTime(2023, 6, 5, 7, 35, 2, 276, DateTimeKind.Local).AddTicks(5824),
+                            ParentCommantId = 0,
                             Score = 12,
-                            UpdatedAt = new DateTime(2023, 6, 3, 2, 23, 33, 143, DateTimeKind.Local).AddTicks(3832),
+                            UpdatedAt = new DateTime(2023, 6, 5, 7, 35, 2, 276, DateTimeKind.Local).AddTicks(5827),
                             UserId = new Guid("c8de10e9-7268-4dd1-ae2b-2f897d7f0a58")
                         },
                         new
                         {
-                            CommentId = 2,
-                            CommentContent = "Woah, your project looks awesome! How long have you been coding for? I'm still new, but think I want to dive into Angular as well soon. Perhaps you can give me an insight on where I can learn Angular? Thanks!",
-                            CreatedAt = new DateTime(2023, 6, 3, 2, 23, 33, 143, DateTimeKind.Local).AddTicks(3835),
+                            Id = 2,
+                            Content = "Woah, your project looks awesome! How long have you been coding for? I'm still new, but think I want to dive into Angular as well soon. Perhaps you can give me an insight on where I can learn Angular? Thanks!",
+                            CreatedAt = new DateTime(2023, 6, 5, 7, 35, 2, 276, DateTimeKind.Local).AddTicks(5833),
+                            ParentCommantId = 0,
                             Score = 5,
-                            UpdatedAt = new DateTime(2023, 6, 3, 2, 23, 33, 143, DateTimeKind.Local).AddTicks(3837),
+                            UpdatedAt = new DateTime(2023, 6, 5, 7, 35, 2, 276, DateTimeKind.Local).AddTicks(5834),
                             UserId = new Guid("cb4e3ea5-9264-40a9-ae28-24a782b5ffd4")
                         },
                         new
                         {
-                            CommentId = 3,
-                            CommentContent = "If you're looking to kick start your career, search no further. React is all you need. Welcome to the Dark Side.",
-                            CreatedAt = new DateTime(2023, 6, 3, 2, 23, 33, 143, DateTimeKind.Local).AddTicks(3839),
+                            Id = 3,
+                            Content = "If you're looking to kick start your career, search no further. React is all you need. Welcome to the Dark Side.",
+                            CreatedAt = new DateTime(2023, 6, 5, 7, 35, 2, 276, DateTimeKind.Local).AddTicks(5836),
                             ParentCommantId = 2,
                             ReplyingTo = "lukeskywalker",
                             Score = 4,
-                            UpdatedAt = new DateTime(2023, 6, 3, 2, 23, 33, 143, DateTimeKind.Local).AddTicks(3840),
+                            UpdatedAt = new DateTime(2023, 6, 5, 7, 35, 2, 276, DateTimeKind.Local).AddTicks(5837),
                             UserId = new Guid("1cd9e503-4a83-492a-afc6-35a9d182cdc1")
                         },
                         new
                         {
-                            CommentId = 4,
-                            CommentContent = "Chillax, my Padawans. Much to learn, you have. The fundamentals of HTML, CSS, and JS,  I'd recommend focusing on. It's very tempting to jump ahead but lay a solid foundation first. Everything moves so fast and it always seems like everyone knows the newest library/framework. But the fundamentals are what stays constant.",
-                            CreatedAt = new DateTime(2023, 6, 3, 2, 23, 33, 143, DateTimeKind.Local).AddTicks(3843),
+                            Id = 4,
+                            Content = "Chillax, my Padawans. Much to learn, you have. The fundamentals of HTML, CSS, and JS,  I'd recommend focusing on. It's very tempting to jump ahead but lay a solid foundation first. Everything moves so fast and it always seems like everyone knows the newest library/framework. But the fundamentals are what stays constant.",
+                            CreatedAt = new DateTime(2023, 6, 5, 7, 35, 2, 276, DateTimeKind.Local).AddTicks(5839),
                             ParentCommantId = 2,
                             ReplyingTo = "vader",
                             Score = 2,
-                            UpdatedAt = new DateTime(2023, 6, 3, 2, 23, 33, 143, DateTimeKind.Local).AddTicks(3844),
+                            UpdatedAt = new DateTime(2023, 6, 5, 7, 35, 2, 276, DateTimeKind.Local).AddTicks(5840),
                             UserId = new Guid("21e9638c-2dd9-4c43-b4a6-4c2f5fcb3f59")
                         });
                 });
@@ -129,38 +133,38 @@ namespace Api.Migrations
                         new
                         {
                             UserId = new Guid("cb4e3ea5-9264-40a9-ae28-24a782b5ffd4"),
-                            CreatedAt = new DateTime(2023, 6, 3, 2, 23, 33, 143, DateTimeKind.Local).AddTicks(3446),
+                            CreatedAt = new DateTime(2023, 6, 5, 7, 35, 2, 276, DateTimeKind.Local).AddTicks(5681),
                             UserName = "lukesksywalker"
                         },
                         new
                         {
                             UserId = new Guid("c8de10e9-7268-4dd1-ae2b-2f897d7f0a58"),
-                            CreatedAt = new DateTime(2023, 6, 3, 2, 23, 33, 143, DateTimeKind.Local).AddTicks(3694),
+                            CreatedAt = new DateTime(2023, 6, 5, 7, 35, 2, 276, DateTimeKind.Local).AddTicks(5709),
                             UserName = "leiaskywalker"
                         },
                         new
                         {
                             UserId = new Guid("1cd9e503-4a83-492a-afc6-35a9d182cdc1"),
-                            CreatedAt = new DateTime(2023, 6, 3, 2, 23, 33, 143, DateTimeKind.Local).AddTicks(3697),
+                            CreatedAt = new DateTime(2023, 6, 5, 7, 35, 2, 276, DateTimeKind.Local).AddTicks(5711),
                             UserName = "vader"
                         },
                         new
                         {
                             UserId = new Guid("21e9638c-2dd9-4c43-b4a6-4c2f5fcb3f59"),
-                            CreatedAt = new DateTime(2023, 6, 3, 2, 23, 33, 143, DateTimeKind.Local).AddTicks(3699),
+                            CreatedAt = new DateTime(2023, 6, 5, 7, 35, 2, 276, DateTimeKind.Local).AddTicks(5714),
                             UserName = "yoda"
                         });
                 });
 
             modelBuilder.Entity("Entities.Models.Comment", b =>
                 {
-                    b.HasOne("Entities.Models.User", "User")
+                    b.HasOne("Entities.Models.User", "Users")
                         .WithMany("Comments")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("Entities.Models.User", b =>

@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.ComponentModel.DataAnnotations;
 
 namespace Entities.DataTransferObjects
 {
-    public class CommentForCreationDto
+    public class CommentsReplyForCreationDto
     {
         public string Content { get; set; }
         public string ReplyingTo { get; set; }
-        public int? Score { get; set; }                       
+        public int? Score { get; set; }
     }
 }

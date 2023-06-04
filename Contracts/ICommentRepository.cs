@@ -13,6 +13,7 @@ namespace Contracts
         Task<Comment> GetCommentAsync(int commentId, bool trackChanges);
         Task<List<CommentsWithRepliesDto>> GetCommentWithRepliesAsync(int commentId, bool trackChanges);
         void CreateCommentForUser(Guid userId, Comment comment);
+        void CreateCommentsReplyForUser(int id, Guid userId, Comment comment);
         void DeleteComment(Comment comment);
     }
 }

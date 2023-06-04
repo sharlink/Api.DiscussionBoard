@@ -45,6 +45,16 @@ namespace Repository
         public void CreateCommentForUser(Guid userId, Comment comment)
         {
             comment.UserId = userId;
+            comment.ParentCommantId = 0;
+            comment.CreatedAt= DateTime.Now;
+            Create(comment);
+        }
+
+        public void CreateCommentsReplyForUser(int id, Guid userId, Comment comment)
+        {
+            comment.UserId = userId;
+            comment.ParentCommantId= id;
+            comment.CreatedAt = DateTime.Now;
             Create(comment);
         }
 

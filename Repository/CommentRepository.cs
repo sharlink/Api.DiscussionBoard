@@ -27,6 +27,23 @@ namespace Repository
             var comments = await FindAll(trackChanges)
                 .ToListAsync();
 
+            var parentComments = comments.Where(p => p.ParentCommantId == 0).ToList();
+            var replyComments = comments.Where(p => p.ParentCommantId != 0).ToList();
+
+            var commentsWithReplies = from p in parentComments
+                                      join r in replyComments on p.Id equals r.ParentCommantId
+                                      into replies
+                                      from defultVal in replies.DefaultIfEmpty()
+                                      select new
+                                      {
+                                          commentID = p.Id,
+                                          content = p.Content,
+                                          replyContent = defultVal?.Content
+
+                                      };
+
+            var cunt = commentsWithReplies.Count();
+
             return PagedList<Comment>
                  .ToPagedList(comments, commentParameters.PageNumber, commentParameters.PageSize);
         }

@@ -25,10 +25,10 @@ namespace Api.Controllers
             _repository = repository;
             _mapper = mapper;
         }
+
         [HttpGet]
         public async Task<IActionResult> GetComments([FromQuery] CommentParameters commentParameters)
         {
-
             var comments = await _repository.Comment.GetCommentsAsync(commentParameters, trackChanges: false);
             if (comments == null)
             {
@@ -36,6 +36,8 @@ namespace Api.Controllers
                 return NotFound();
             }
 
+
+            
            
 
             //var employeesFromDb = await _repository.Employee.GetEmployeesAsync(companyId, employeeParameters, trackChanges: false);
@@ -80,6 +82,20 @@ namespace Api.Controllers
             return CreatedAtRoute("GetCommentForUser", new { userId, id = employeeToReturn.UserId }, employeeToReturn);
 
         }
+        
+
+        [HttpPut("{id}")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [ServiceFilter(typeof(ValidateUserForCommentExistsAttribute))]
+        public async Task<IActionResult> UpdateCommentForUser(int commentId, Guid id, [FromBody] CommentForUpdateDto comment)
+        {
+            var commentEntity = HttpContext.Items["comment"] as Comment;            
+
+            _mapper.Map(comment, commentEntity);
+            await _repository.SaveAsync();
+
+            return NoContent();
+        }
 
         [HttpDelete("{id}")]
         [ServiceFilter(typeof(ValidateUserForCommentExistsAttribute))]
@@ -88,19 +104,6 @@ namespace Api.Controllers
             var commentForUser = HttpContext.Items["comment"] as Comment;
 
             _repository.Comment.DeleteComment(commentForUser);
-            await _repository.SaveAsync();
-
-            return NoContent();
-        }
-
-        [HttpPut("{id}")]
-        [ServiceFilter(typeof(ValidationFilterAttribute))]
-        [ServiceFilter(typeof(ValidateUserForCommentExistsAttribute))]
-        public async Task<IActionResult> UpdateCommentForUser(int commentId, Guid id, [FromBody] CommentForUpdateDto comment)
-        {
-            var commentEntity = HttpContext.Items["comment"] as Comment;
-
-            _mapper.Map(comment, commentEntity);
             await _repository.SaveAsync();
 
             return NoContent();

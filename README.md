@@ -77,3 +77,7 @@ DELETE /replies/456 HTTP/1.1
 Host: api.example.com
 Authorization: API_KEY your-api-key
 
+## Swagger UI
+![image](https://github.com/sharlink/Api.DiscussionBoard/assets/7361263/51bb0367-6eac-4c1f-9dab-9e71e3edb745)
+
+
